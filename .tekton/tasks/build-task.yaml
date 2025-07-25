@@ -8,10 +8,10 @@ spec:
   steps:
     - name: kaniko-build
       image: gcr.io/kaniko-project/executor:latest
-      workingDir: $(workspaces.source.path)
+      workingDir: /workspace/source
       args:
         - "--dockerfile=Dockerfile"
-        - "--context=$(workspaces.source.path)"
+        - "--context=dir://workspace/source"
         - "--destination=image-registry.openshift-image-registry.svc:5000/myproject/myapp:latest"
-        - "--insecure"  # ← utile in ambienti senza TLS
+        - "--insecure"
         - "--skip-tls-verify"
