@@ -6,23 +6,7 @@ spec:
   workspaces:
     - name: shared-workspace
   tasks:
-    - name: fetch-source
-      taskRef:
-        name: git-clone
-        kind: ClusterTask
-      workspaces:
-        - name: output
-          workspace: shared-workspace
-      params:
-        - name: url
-          value: https://github.com/AlfaScorpii96bis/ci-cd-final-project
-        - name: revision
-          value: main
-        - name: deleteExisting
-          value: "true"
-
     - name: lint
-      runAfter: [fetch-source]
       taskRef:
         name: lint-task
       workspaces:
@@ -30,13 +14,19 @@ spec:
           workspace: shared-workspace
 
     - name: test
-      runAfter: [lint]
       taskRef:
         name: test-task
+      runAfter:
+        - lint
       workspaces:
         - name: source
           workspace: shared-workspace
 
     - name: build
-      runAfter: [test]
-      ta
+      taskRef:
+        name: build-task
+      runAfter:
+        - test
+      workspaces:
+        - name: source
+          workspace: shared-workspace
