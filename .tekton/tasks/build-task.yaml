@@ -10,6 +10,8 @@ spec:
       image: gcr.io/kaniko-project/executor:latest
       workingDir: $(workspaces.source.path)
       args:
-        - "--dockerfile=$(workspaces.source.path)/Dockerfile"
+        - "--dockerfile=Dockerfile"
         - "--context=$(workspaces.source.path)"
         - "--destination=image-registry.openshift-image-registry.svc:5000/myproject/myapp:latest"
+        - "--insecure"  # ← utile in ambienti senza TLS
+        - "--skip-tls-verify"
