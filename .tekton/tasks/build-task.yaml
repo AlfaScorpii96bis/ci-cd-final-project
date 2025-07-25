@@ -11,5 +11,5 @@ spec:
       workingDir: $(workspaces.source.path)
       args:
         - "--dockerfile=Dockerfile"
-        - "--context=dir://$(workspaces.source.path)"
+        - "--context=$(workspaces.source.path)"
         - "--destination=image-registry.openshift-image-registry.svc:5000/myproject/myapp:latest"
