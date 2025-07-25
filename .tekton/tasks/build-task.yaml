@@ -10,6 +10,6 @@ spec:
       image: gcr.io/kaniko-project/executor:latest
       workingDir: $(workspaces.source.path)
       args:
-        - "--dockerfile=Dockerfile"
+        - "--dockerfile=$(workspaces.source.path)/Dockerfile"
         - "--context=$(workspaces.source.path)"
         - "--destination=image-registry.openshift-image-registry.svc:5000/myproject/myapp:latest"
