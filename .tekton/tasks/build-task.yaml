@@ -9,15 +9,13 @@ spec:
     - name: kaniko-build
       image: gcr.io/kaniko-project/executor:latest
       workingDir: $(workspaces.source.path)
-      command:
-        - /kaniko/executor
-      args:
-        - "--dockerfile=$(workspaces.source.path)/Dockerfile"
-        - "--context=$(workspaces.source.path)"
-        - "--destination=image-registry.openshift-image-registry.svc:5000/sn-labs-giuseppecali/ci-cd-final-project:latest"
-        - "--insecure"
-        - "--insecure-pull"
-        - "--skip-tls-verify"
       env:
         - name: DOCKER_CONFIG
           value: /tekton/home/.docker
+      script: |
+        #!/busybox/sh
+        echo "🚀 Avvio build Kaniko..."
+        /kaniko/executor \
+          --dockerfile=$(workspaces.source.path)/Dockerfile \
+          --context=$(workspaces.source.path) \
+          --destination=image-registry.openshift-image-registry.svc:5000/sn-labs-giuseppecali/ci-cd-final-project:latest
