@@ -1,0 +1,38 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: ci-cd-pipeline
+spec:
+  workspaces:
+    - name: shared-workspace
+  tasks:
+    - name: lint
+      taskRef:
+        name: lint-task
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+
+    - name: test
+      taskRef:
+        name: test-task
+      runAfter: [lint]
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+
+    - name: build
+      taskRef:
+        name: build-task
+      runAfter: [test]
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+
+    - name: deploy
+      taskRef:
+        name: deploy-task
+      runAfter: [build]
+      workspaces:
+        - name: source
+          workspace: shared-workspace

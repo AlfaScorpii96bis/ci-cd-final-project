@@ -1,0 +1,43 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: github-trigger-binding
+spec:
+  params:
+    - name: gitrevision
+      value: $(body.head_commit.id)
+    - name: gitrepositoryurl
+      value: $(body.repository.clone_url)
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: pipeline-template
+spec:
+  params:
+    - name: gitrevision
+    - name: gitrepositoryurl
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: ci-cd-pipeline-run-
+      spec:
+        pipelineRef:
+          name: ci-cd-pipeline
+        workspaces:
+          - name: shared-workspace
+            emptyDir: {}
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: ci-cd-event-listener
+spec:
+  triggers:
+    - name: github-trigger
+      bindings:
+        - ref: github-trigger-binding
+      template:
+        ref: pipeline-template
