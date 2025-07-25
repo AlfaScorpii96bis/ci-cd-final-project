@@ -1,17 +1,20 @@
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: Task
 metadata:
-  name: build-task
+  name: kaniko-build
 spec:
-  workspaces:
-    - name: source
+  params:
+    - name: IMAGE
+      type: string
   steps:
     - name: kaniko-build
       image: gcr.io/kaniko-project/executor:latest
-      workingDir: /workspace/source
-      args:
-        - "--dockerfile=Dockerfile"
-        - "--context=dir://workspace/source"
-        - "--destination=image-registry.openshift-image-registry.svc:5000/myproject/myapp:latest"
-        - "--insecure"
-        - "--skip-tls-verify"
+      env:
+        - name: DOCKER_CONFIG
+          value: /tekton/home/.docker
+      script: |
+        #!/busybox/sh
+        /kaniko/executor \
+          --context=/workspace/ \
+          --destination=$(params.IMAGE) \
+          --dockerfile=Dockerfile
