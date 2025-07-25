@@ -1,0 +1,13 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: deploy-task
+spec:
+  workspaces:
+    - name: source
+  steps:
+    - name: oc-deploy
+      image: quay.io/openshift/origin-cli:4.10
+      script: |
+        #!/bin/bash
+        oc rollout restart deployment myapp
