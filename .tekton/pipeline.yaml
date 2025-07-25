@@ -14,19 +14,17 @@ spec:
           workspace: shared-workspace
 
     - name: test
+      runAfter: [lint]
       taskRef:
         name: test-task
-      runAfter:
-        - lint
       workspaces:
         - name: source
           workspace: shared-workspace
 
     - name: build
+      runAfter: [test]
       taskRef:
         name: build-task
-      runAfter:
-        - test
       workspaces:
         - name: source
           workspace: shared-workspace
