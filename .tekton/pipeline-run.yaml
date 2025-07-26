@@ -1,10 +1,11 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: ci-cd-pipeline-run
+  generateName: ci-cd-pipeline-run-
 spec:
   pipelineRef:
     name: ci-cd-pipeline
   workspaces:
     - name: shared-workspace
       emptyDir: {}
+  serviceAccountName: pipeline
